@@ -1,3 +1,5 @@
+My work can be found in src/components. The other files except the database.json are generated automatically.
+
 # recipe-app
 
 ## Project setup
