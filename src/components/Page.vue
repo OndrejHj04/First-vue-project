@@ -8,7 +8,7 @@
       <input type="text" v-model="recipe" />
 
       <label>Ingredients: </label>
-      <input type="text" v-model="ingredients" @keyup="key(ingredients)"/>
+      <input type="text" v-model="ingredients" @keyup="key(ingredients)" />
 
       <label>Gluten free: </label>
       <input type="checkbox" v-model="free" />
@@ -17,7 +17,20 @@
   <div class="live">
     <form @submit.prevent="submit">
       <span id="span" v-if="recipe">Recipe: {{ recipe }}</span>
-      <span id="span" v-if="ingredientsArr.length">Ingredients:</span> <span style="background: pink; color: black; padding: 10px; border-radius: 20px; margin: 10px;" v-for="item in ingredientsArr" :key="item" @click="remove(item)">{{ item }}</span>
+      <span id="span" v-if="ingredientsArr.length">Ingredients:</span>
+      <span
+        style="
+          background: pink;
+          color: black;
+          padding: 10px;
+          border-radius: 20px;
+          margin: 10px;
+        "
+        v-for="item in ingredientsArr"
+        :key="item"
+        @click="remove(item)"
+        >{{ item }}</span
+      >
       <span id="span" v-if="free">Gluten free: {{ free }}</span>
       <button class="save" v-if="recipe && ingredientsArr.length">save</button>
     </form>
@@ -25,8 +38,14 @@
 
   <div class="showcase">
     <div class="item" v-for="item in db" :key="item">
-      <p>{{ item.recipe }}</p>
-      <img src="../assets/gluten.png" alt="" v-if="item.free"/>
+      <a href="/Details.vue"><p>{{ item.recipe }}</p></a>
+      <img id="img-right" src="../assets/gluten.png" alt="" v-if="item.free" />
+      <img
+        id="img-left"
+        src="../assets/remove.png"
+        alt=""
+        @click="removeItem(item)"
+      />
     </div>
   </div>
 </template>
@@ -39,35 +58,42 @@ export default {
       recipe: null,
       ingredients: null,
       free: null,
-      ingredientsArr: []
+      ingredientsArr: [],
     };
   },
   methods: {
     submit() {
-      let object = {"recipe": this.recipe, "ingredients": this.ingredientsArr, "free": this.free }
-      this.recipe = ""
-      this.ingredientsArr = ""
-      this.free = ""
-      this.db.push(object)
-      console.log(this.db)
+      let object = { recipe: this.recipe, ingredients: this.ingredientsArr, free: this.free };
+      this.recipe = "";
+      this.ingredientsArr = [];
+      this.free = "";
+      this.db.push(object);
     },
-    key(e){
-      if(e.includes(" " || ",")){
-      this.ingredientsArr.push(e.slice(0, -1))
-      this.ingredients = ""
+    key(e) {
+      if (e.includes(" " || ",")) {
+        this.ingredientsArr.push(e);
+        this.ingredients = "";
       }
     },
-    remove(e){
-      this.ingredientsArr.shift(e)
-    }
+    remove(e) {
+      this.ingredientsArr.shift(e);
+    },
+    removeItem(e) {
+      this.db.shift(e);
+    },
   },
 };
 </script>
 
 <style>
-.item img {
+.item #img-right {
   position: absolute;
   right: 10px;
+  top: 18px;
+}
+.item #img-left {
+  position: absolute;
+  left: 10px;
   top: 18px;
 }
 .item {
