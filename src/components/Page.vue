@@ -36,9 +36,16 @@
     </form>
   </div>
 
+  <div v-if="db.length">
+    <form class="search">
+      <input type="text" v-model="search" @keyup="find(search)"/>
+    </form>
+  </div>
+
   <div class="showcase">
-    <div class="item" v-for="item in db" :key="item">
-      <a href="/Details.vue"><p>{{ item.recipe }}</p></a>
+    <div v-for="item in db" :key="item">
+    <div class="item" v-if="item.toggle">
+      <p>{{ item.recipe }}</p>
       <img id="img-right" src="../assets/gluten.png" alt="" v-if="item.free" />
       <img
         id="img-left"
@@ -46,6 +53,7 @@
         alt=""
         @click="removeItem(item)"
       />
+    </div>
     </div>
   </div>
 </template>
@@ -59,11 +67,17 @@ export default {
       ingredients: null,
       free: null,
       ingredientsArr: [],
+      toggle: null
     };
   },
   methods: {
     submit() {
-      let object = { recipe: this.recipe, ingredients: this.ingredientsArr, free: this.free };
+      let object = {
+        recipe: this.recipe,
+        ingredients: this.ingredientsArr,
+        free: this.free,
+        toggle: true
+      };
       this.recipe = "";
       this.ingredientsArr = [];
       this.free = "";
@@ -81,11 +95,25 @@ export default {
     removeItem(e) {
       this.db.shift(e);
     },
+    find(e) {
+      for (let i = 0; i < this.db.length; i++) {
+        this.db[i].toggle = this.db[i].recipe.includes(e)
+      }
+    },
   },
 };
 </script>
 
 <style>
+.search {
+  background: crimson;
+  color: #ddd;
+  font-size: 25px;
+  padding: 20px;
+  text-align: left;
+  justify-content: space-between;
+}
+
 .item #img-right {
   position: absolute;
   right: 10px;
